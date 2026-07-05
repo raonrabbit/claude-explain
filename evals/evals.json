@@ -1,0 +1,26 @@
+{
+  "skill_name": "explain",
+  "evals": [
+    {
+      "id": 0,
+      "name": "globe-tile-layer-code-md",
+      "prompt": "flightrail의 GlobeTileLayer가 지구본 타일을 어떻게 로딩하는지 설명해줘",
+      "expected_output": "GlobeTileLayer.tsx의 실제 코드를 인용하고, 타일 좌표계 등 사전지식을 먼저 가르친 뒤 로딩 흐름을 단계별로 푼 md 가이드북이 /explain-docs/<슬러그>/ 폴더에 생성됨",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "projects-timeline-code-html",
+      "prompt": "--html apps/my-page의 projects 타임라인이 스크롤에 따라 SVG를 어떻게 그리는지 설명해줘",
+      "expected_output": "관련 컴포넌트의 실제 코드를 인용하고 스크롤 드리븐 SVG(pathLength 등) 사전지식을 가르친 HTML 가이드북이 폴더에 생성됨. 사이드바 목차/코드 하이라이트 포함",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "r3f-useframe-concept-md",
+      "prompt": "R3F의 useFrame 훅이 뭔지, three.js 처음 보는 사람도 이해하게 설명해줘",
+      "expected_output": "three.js 렌더 루프 기본기부터 점층적으로 쌓아 useFrame을 이해시키는 md 가이드북. 실제 코드 예시 포함, 폴더로 생성",
+      "files": []
+    }
+  ]
+}

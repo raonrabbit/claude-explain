@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --line: #d1d9e0;
+    --accent: #0969da; --sidebar: #f6f8fa; --code-bg: #f6f8fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --line: #30363d;
+      --accent: #4493f8; --sidebar: #161b22; --code-bg: #161b22;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: -apple-system, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    font-size: 16px; line-height: 1.75;
+    display: grid; grid-template-columns: 280px 1fr;
+  }
+  nav {
+    position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+    background: var(--sidebar); border-right: 1px solid var(--line); padding: 24px 16px;
+  }
+  nav .book-title { font-weight: 700; font-size: 15px; margin-bottom: 16px; }
+  nav a {
+    display: block; color: var(--muted); text-decoration: none;
+    padding: 4px 8px; border-radius: 6px; font-size: 14px; line-height: 1.5;
+  }
+  nav a:hover { background: var(--line); color: var(--fg); }
+  nav a.h3 { padding-left: 22px; font-size: 13px; }
+  nav a.active { color: var(--accent); font-weight: 600; }
+  main { padding: 48px 56px; max-width: 820px; margin: 0 auto; width: 100%; }
+  h1 { font-size: 2em; padding-bottom: .3em; border-bottom: 1px solid var(--line); }
+  h2 { font-size: 1.5em; margin-top: 2em; padding-bottom: .3em; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.2em; margin-top: 1.6em; }
+  a { color: var(--accent); }
+  code {
+    background: var(--code-bg); padding: .2em .4em; border-radius: 6px;
+    font-family: "SFMono-Regular", Consolas, monospace; font-size: 85%;
+  }
+  pre { background: var(--code-bg); padding: 16px; border-radius: 8px; overflow: auto; }
+  pre code { background: none; padding: 0; font-size: 90%; }
+  blockquote {
+    margin: 0; padding: 0 1em; color: var(--muted); border-left: .25em solid var(--line);
+  }
+  table { border-collapse: collapse; }
+  th, td { border: 1px solid var(--line); padding: 6px 13px; }
+  img { max-width: 100%; }
+  /* 사이드바: 전체 목차(index)로 돌아가는 홈 링크 (챕터형에서 사용) */
+  nav .home-link { color: var(--accent); font-weight: 600; margin-bottom: 16px; }
+  /* 챕터 하단 이전/목차/다음 네비게이션 (hover 효과 포함) */
+  .chapter-nav {
+    display: flex; gap: 8px; align-items: stretch;
+    margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .chapter-nav a, .chapter-nav span {
+    flex: 1; min-width: 0; padding: 12px 14px; border: 1px solid var(--line);
+    border-radius: 8px; font-size: 14px; line-height: 1.4;
+    text-decoration: none; color: var(--fg);
+    transition: border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .chapter-nav a:hover { border-color: var(--accent); background: var(--sidebar); transform: translateY(-2px); }
+  .chapter-nav .nav-home { flex: 0 0 auto; display: flex; align-items: center; white-space: nowrap; color: var(--accent); font-weight: 600; }
+  .chapter-nav .nav-next { text-align: right; }
+  .chapter-nav .disabled { opacity: .45; }
+  /* 참고 자료 출처 태그 (새 탭으로 열리는 외부 링크, hover 효과 포함) */
+  .source-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 10px; margin: 2px 6px 2px 0;
+    border: 1px solid var(--line); border-radius: 999px;
+    font-size: 13px; text-decoration: none; color: var(--accent);
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .source-tag:hover { border-color: var(--accent); background: var(--sidebar); }
+  .source-tag::after { content: "↗"; font-size: 11px; opacity: .7; }
+  /* 본문 안 인라인 인용: 개념어 자체를 출처로 연결하는 파란 링크 (밑줄 + ↗) */
+  .cite-link { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+  .cite-link::after { content: "↗"; font-size: .72em; vertical-align: super; margin-left: 1px; opacity: .7; }
+  /* 본문 안 인라인 인용: 문장 끝에 붙이는 작은 ↗ 아이콘 마커 (새 탭) */
+  a.cite {
+    display: inline-block; margin-left: 3px; padding: 0 4px;
+    font-size: .72em; line-height: 1.3; vertical-align: super;
+    color: var(--accent); text-decoration: none;
+    border: 1px solid var(--line); border-radius: 4px;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  a.cite:hover { border-color: var(--accent); background: var(--sidebar); }
+  @media (max-width: 720px) {
+    body { grid-template-columns: 1fr; }
+    nav { position: static; height: auto; }
+    main { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="book-title">{{TITLE}}</div>
+  <!-- 챕터형 가이드북: 전체 목차(index)로 돌아가는 상시 링크. 단일 파일이면 이 줄을 지운다. -->
+  <a class="home-link" href="index.html">📚 전체 목차로</a>
+  <div id="toc"></div>
+</nav>
+<main id="content-rendered"></main>
+
+<!-- 본문을 여기에 마크다운으로 작성한다. 목차는 h2/h3에서 자동 생성된다. -->
+<script id="content" type="text/markdown">
+# {{TITLE}}
+
+여기에 가이드북 본문을 마크다운으로 작성한다.
+
+<!-- 출처는 두 층으로 단다.
+(1) 인라인 인용 — 주장/개념/수치가 나오는 바로 그 자리에 건다. 두 방식 중 택:
+  · 개념어 자체를 링크: <a class="cite-link" href="URL" target="_blank" rel="noopener noreferrer">Route Handlers</a>
+  · 문장 끝 아이콘 마커: 5분 rolling window로 집계한다<a class="cite" href="URL" target="_blank" rel="noopener noreferrer" title="출처: 공식문서">↗</a>
+(2) 하단 종합 — 챕터 끝에 참고 자료 섹션. 예:
+## 참고 자료
+<a class="source-tag" href="https://docs.example.com/page.html" target="_blank" rel="noopener noreferrer">문서 제목</a>
+-->
+
+<!-- 챕터형이면 본문 맨 끝(아래 </script> 직전)에 이전/목차/다음 네비를 넣는다. 예:
+<div class="chapter-nav">
+  <a class="nav-prev" href="01-....html">← 이전<br><strong>01. 이전 장 제목</strong></a>
+  <a class="nav-home" href="index.html">📚 목차</a>
+  <a class="nav-next" href="03-....html">다음 →<br><strong>03. 다음 장 제목</strong></a>
+</div>
+첫 장의 이전·마지막 장의 다음은 <span class="disabled">← 이전 없음</span> 처럼 span 으로 비활성 처리한다. -->
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  const md = document.getElementById('content').textContent;
+  const main = document.getElementById('content-rendered');
+  main.innerHTML = marked.parse(md);
+  document.querySelectorAll('pre code').forEach(el => window.hljs && hljs.highlightElement(el));
+
+  // 목차 자동 생성 (h2/h3)
+  const toc = document.getElementById('toc');
+  const heads = main.querySelectorAll('h2, h3');
+  heads.forEach((h, i) => {
+    const id = 'sec-' + i;
+    h.id = id;
+    const a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    a.className = h.tagName === 'H3' ? 'h3' : 'h2';
+    toc.appendChild(a);
+  });
+
+  // 스크롤 시 현재 섹션 강조
+  const links = [...toc.querySelectorAll('a')];
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = links.find(l => l.getAttribute('href') === '#' + e.target.id);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '0px 0px -80% 0px' });
+  heads.forEach(h => obs.observe(h));
+</script>
+</body>
+</html>
