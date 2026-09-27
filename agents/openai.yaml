@@ -1,0 +1,4 @@
+interface:
+  display_name: "Explain Guidebook"
+  short_description: "코드와 개념을 이해하기 쉬운 가이드북으로 만듭니다"
+  default_prompt: "Use $explain to create an md guidebook explaining this code flow for a new developer."

@@ -54,28 +54,31 @@ cd ~/.claude/skills/explain && git pull
 ## 사용법
 
 ```
-/explain <설명할 주제 또는 대상>
-/explain --html <설명할 주제 또는 대상>
+/explain <형식> <설명할 주제 또는 대상>
 ```
 
-- 기본 출력은 **Markdown**. `--html`을 붙이면 자체 완결형 **단일 HTML**(사이드바 목차·앵커 이동·코드 하이라이트·챕터 네비게이션 내장)로 만듭니다.
-- 명시적으로 `/explain`을 치지 않아도, "이거 어떻게 동작하는지 설명해줘", "공부 자료로 만들어줘" 같은 요청에도 이 스킬이 활성화됩니다.
+- **형식은 필수**이며 `md` · `html` · `pdf` 중 **하나 이상**을 지정합니다. 여러 개를 함께 줄 수 있습니다(예: `md pdf`, `html,pdf`, `html+pdf`). `--html`은 하위호환으로 계속 `html`을 뜻합니다.
+  - **md** — Markdown 가이드북.
+  - **html** — 자체 완결형 **단일 HTML**(사이드바 목차·앵커 이동·코드 하이라이트·챕터 네비게이션 내장, 모바일 대응·넓은 표 스크롤 처리).
+  - **pdf** — HTML을 거쳐 만든 **단일 PDF 문서**(인쇄용 스타일 적용). 변환에는 Chrome/Chromium/Edge/Brave와 인터넷 연결이 필요합니다.
+- **형식을 지정하지 않으면** 스킬이 바로 만들지 않고 사용법을 보여준 뒤 "어떤 형식으로 만들까요?"라고 되묻습니다.
+- 명시적으로 `/explain`을 치지 않아도, "이거 어떻게 동작하는지 설명해줘", "공부 자료로 만들어줘" 같은 요청에도 이 스킬이 활성화됩니다(이때도 형식을 되묻습니다).
 
 ### 예시 1 — 레포 코드 설명 (Markdown)
 
 ```
-/explain flightrail의 GlobeTileLayer가 지구본 타일을 어떻게 로딩하는지
+/explain md flightrail의 GlobeTileLayer가 지구본 타일을 어떻게 로딩하는지
 ```
 
 → `GlobeTileLayer.tsx`와 관련 파일을 읽고, **타일/슬리피 맵 좌표계** 같은 사전지식을 먼저 가르친 뒤, 실제 코드를 인용하며 로딩 흐름을 단계별로 푼 가이드북을 `explain-docs/flightrail-globe-tile-layer/`에 생성.
 
-### 예시 2 — 개념 설명 (HTML)
+### 예시 2 — 개념 설명 (HTML + PDF)
 
 ```
-/explain --html React Server Components가 뭔지 처음 보는 사람도 이해하게
+/explain html pdf React Server Components가 뭔지 처음 보는 사람도 이해하게
 ```
 
-→ 클라이언트/서버 렌더링 기본기부터 쌓아 올리는 챕터형 HTML 가이드북을 `explain-docs/react-server-components/`에 생성. `index.html`을 브라우저로 열면 됩니다.
+→ 클라이언트/서버 렌더링 기본기부터 쌓아 올리는 챕터형 HTML 가이드북과, 이를 합친 단일 PDF 문서를 `explain-docs/react-server-components/`에 함께 생성. `index.html`을 브라우저로 열거나 `<슬러그>.pdf`를 열면 됩니다.
 
 ---
 
@@ -95,5 +98,6 @@ cd ~/.claude/skills/explain && git pull
 | 파일 | 역할 |
 |------|------|
 | `SKILL.md` | 스킬 정의(frontmatter) + 가이드북 작성 방법론 전체 |
-| `assets/guidebook-template.html` | `--html` 출력에 쓰는 자체 완결형 템플릿(목차·네비·출처 태그 내장) |
+| `assets/guidebook-template.html` | `html`/`pdf` 출력에 쓰는 자체 완결형 템플릿(목차·네비·출처 태그·모바일/인쇄 스타일 내장) |
+| `scripts/html-to-pdf.sh` | HTML 가이드북을 PDF로 변환(Chrome/Chromium/Edge/Brave headless 자동 탐지) |
 | `evals/evals.json` | 스킬 품질 평가 케이스 |
